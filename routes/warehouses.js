@@ -11,6 +11,20 @@ router.get("/", function (req, res) {
     res.status(201).json(warehouseData)
 })
 
+// API to GET List of Single warehouses
+router.get("/:id", function (req, res) {
+    
+    const paramsID = req.params.id
+    const singleWarehouse = warehouseData.find(warehouse => warehouse.id === paramsID)
+    
+    if (singleWarehouse){
+       res.status(200).send(singleWarehouse)
+        
+    } else {
+        res.status(400).send("Warehouse does not exist")
+    }   
+})
+
 // POST new warehouse
 router.post('/', (req, res) => {
     
