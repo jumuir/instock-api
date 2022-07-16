@@ -54,7 +54,7 @@ router.post('/', (req, res) => {
 });
 
 // PUT edit warehouse
-router.post('/:warehouseId', (req, res) => {
+router.put('/:warehouseId', (req, res) => {
     
     const { name, address, city, country, contact } = req.body;
     
@@ -99,7 +99,7 @@ router.post('/:warehouseId', (req, res) => {
         if (err) throw err;
     });
 
-    res.status(201).send(warehouseUpdate);
+    res.send(warehouseUpdate);
 });
 
 module.exports = router;
