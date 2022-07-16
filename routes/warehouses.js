@@ -6,7 +6,11 @@ const router = express.Router();
 const { v4: uuid } = require('uuid');
 const { validatePhone, validateEmail } = require('../middleware/validators');
 
-<<<<<<< HEAD
+// API to GET List of All warehouses
+router.get("/", function (req, res) {
+    res.status(201).json(warehouseData)
+})
+
 // POST new warehouse
 router.post('/', (req, res) => {
     
@@ -15,12 +19,6 @@ router.post('/', (req, res) => {
         if(!validatePhone(contact.phone)) {
             throw "Phone number format is invalid. Numbers should be +1 (XXX) XXX-XXXX"
         }
-=======
-// API to GET List of All warehouses
-router.get("/", function (req, res) {
-    res.status(201).json(warehouseData)
-})
->>>>>>> a346ecdab847756fe600d376d63898ab74a35273
 
         if (!validateEmail(contact.email)) {
             throw "Email number format is invalid."
