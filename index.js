@@ -8,8 +8,8 @@ const inventoryRoutes = require('./routes/inventories');
 app.use(cors());
 app.use(express.json());
 
-app.use('/warehouse', routes);
-app.use('/inventory', routes);
+app.use('/warehouse', warehouseRoutes);
+app.use('/inventory', inventoryRoutes);
 
 
 app.listen(PORT, ()=> console.log(`Running up that hill on port ${PORT}`));
