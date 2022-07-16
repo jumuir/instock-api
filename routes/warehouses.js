@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
         }
 
         if (!validateEmail(contact.email)) {
-            throw "Email number format is invalid."
+            throw "Email format is invalid."
         }
 
         if (!name || !address || !city || !country || !contact || !contact.name || !contact.position || !contact.phone || !contact.email) {
@@ -29,7 +29,9 @@ router.post('/', (req, res) => {
         }
     } catch (err) {
         res.status(400).send(err);
+        return;
     }
+
     const warehouseToAdd = {
         "id": uuid(),
         "name": name,
@@ -64,7 +66,7 @@ router.put('/:warehouseId', (req, res) => {
         }
 
         if (!validateEmail(contact.email)) {
-            throw "Email number format is invalid."
+            throw "Email format is invalid."
         }
 
         if (!name || !address || !city || !country || !contact || !contact.name || !contact.position || !contact.phone || !contact.email) {
@@ -76,8 +78,9 @@ router.put('/:warehouseId', (req, res) => {
         }
     } catch (err) {
         res.status(400).send(err);
+        return;
     }
-    
+
     const warehouseUpdate = {
         "id": req.params.warehouseId,
         "name": name,
