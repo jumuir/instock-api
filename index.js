@@ -2,12 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const PORT = 8080;
-const routes = require('./routes/warehouses');
- 
+const warehouseRoutes = require('./routes/warehouses');
+const inventoryRoutes = require('./routes/inventories');
+
 app.use(cors());
 app.use(express.json());
 
-app.use('/', routes);
+app.use('/warehouse', routes);
+app.use('/inventory', routes);
 
 
-app.listen(PORT, ()=> console.log(`Running with scissors on port ${PORT}`));
+app.listen(PORT, ()=> console.log(`Running up that hill on port ${PORT}`));
