@@ -6,19 +6,21 @@ const router = express.Router();
 const { v4: uuid } = require('uuid');
 const { validatePhone, validateEmail } = require('../middleware/validators');
 
-// API to GET List of All warehouses
+// GET List of All warehouses
 router.get("/", function (req, res) {
     res.status(201).json(warehouseData)
 })
 
-// API to GET List of Single warehouses
+// GET single warehouse and inventory list
 router.get("/:id", function (req, res) {
     
     const paramsID = req.params.id
     const singleWarehouse = warehouseData.find(warehouse => warehouse.id === paramsID)
+    const warehouseInventory = inventoryData.filter(inventory => inventory.warehouseID === singleWarehouse.id )
+    const warehouseInformation = {...singleWarehouse, warehouseInventory}
     
-    if (singleWarehouse){
-       res.status(200).send(singleWarehouse)
+    if (singleWarehouse && warehouseInventory){
+        res.status(200).send(warehouseInformation)
         
     } else {
         res.status(400).send("Warehouse does not exist")
