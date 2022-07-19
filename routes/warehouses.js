@@ -16,14 +16,13 @@ router.get("/:id", function (req, res) {
     
     const paramsID = req.params.id
     const singleWarehouse = warehouseData.find(warehouse => warehouse.id === paramsID)
-    const warehouseInventory = inventoryData.filter(inventory => inventory.warehouseID === singleWarehouse.id )
-    const warehouseInformation = {...singleWarehouse, warehouseInventory}
-    
-    if (singleWarehouse && warehouseInventory){
-        res.status(200).send(warehouseInformation)
-        
-    } else {
+
+    if (singleWarehouse === undefined){
         res.status(400).send("Warehouse does not exist")
+    }  else {
+        const warehouseInventory = inventoryData.filter(inventory => inventory.warehouseID === singleWarehouse.id)
+        const warehouseInformation = {...singleWarehouse, warehouseInventory}
+        res.status(200).send(warehouseInformation)
     }   
 })
 
