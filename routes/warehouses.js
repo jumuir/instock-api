@@ -1,5 +1,3 @@
-const a = 1
-
 const express = require("express");
 const fs = require("fs");
 const warehouseData = require("../data/warehouses.json");
