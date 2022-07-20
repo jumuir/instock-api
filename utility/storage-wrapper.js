@@ -48,7 +48,7 @@ class StorageWrapper {
     /**
      * Getter for "warehouses" variable.
      */
-    getWrehouses() {
+    getWarehouses() {
         return this._warehouses;
     }
 
