@@ -13,17 +13,17 @@ router.get('/', function (req, res) {
 
 // GET single warehouse and inventory list
 router.get("/:id", function (req, res) {
-        
-        const paramsID = req.params.id
-        const singleWarehouse = warehouseData.find(warehouse => warehouse.id === paramsID)
+    
+    const paramsID = req.params.id
+    const singleWarehouse = warehouseData.find(warehouse => warehouse.id === paramsID)
 
-        if (singleWarehouse === undefined){
-                res.status(400).send("Warehouse does not exist")
-        }    else {
-                const warehouseInventory = inventoryData.filter(inventory => inventory.warehouseID === singleWarehouse.id)
-                const warehouseInformation = {...singleWarehouse, warehouseInventory}
-                res.status(200).send(warehouseInformation)
-        }     
+    if (singleWarehouse === undefined){
+        res.status(400).send("Warehouse does not exist")
+    }  else {
+        const warehouseInventory = inventoryData.filter(inventory => inventory.warehouseID === singleWarehouse.id)
+        const warehouseInformation = {...singleWarehouse, warehouseInventory}
+        res.status(200).send(warehouseInformation)
+    }   
 })
 
 // POST new warehouse
