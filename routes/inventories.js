@@ -1,21 +1,21 @@
-const express = require("express");
-const fs = require("fs");
-const warehouseData = require("../data/warehouses.json");
-const inventoryData = require("../data/inventories.json");
+const express = require('express');
+const fs = require('fs');
+const warehouseData = require('../data/warehouses.json');
+const inventoryData = require('../data/inventories.json');
 const router = express.Router();
-const { v4: uuid } = require("uuid");
+const { v4: uuid } = require('uuid');
 
 // Import wrapper class for file system
 const StorageWrapper = require("./../utility/storage-wrapper.js");
 let storage = new StorageWrapper();
 
 //get all inventory
-router.get("/", (_req, res) => {
+router.get('/', (_req, res) => {
   res.status(200).json(inventoryData);
 });
 
 //get single inventory info
-router.get("/:inventoryId", (req, res) => {
+router.get('/:inventoryId', (req, res) => {
   const id = req.params.inventoryId;
   const selectedInventory = inventoryData.filter((inventory) => inventory.id === id);
 
@@ -29,7 +29,7 @@ router.get("/:inventoryId", (req, res) => {
 /**
  * POST route for adding an inventory item to the inventory list.
  */
-router.post("/", function (req, res) {
+router.post('/', function (req, res) {
   if (req.body) {
     // Only proceed further if the warehouse ID is valid, and the warehouse exists.
     if (!req.body.warehouseID) {
