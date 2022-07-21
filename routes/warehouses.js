@@ -176,4 +176,5 @@ router.delete("/:warehouseId", (req, res) => {
   res.send(deletedData).status(200);
 });
 
+
 module.exports = router;
