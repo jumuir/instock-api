@@ -32,17 +32,21 @@ router.get('/:inventoryId', (req, res) => {
 router.post('/', function (req, res) {
     if (req.body) {
         // Only proceed further if the warehouse ID is valid, and the warehouse exists.
-        if (!req.body.warehouseID) {
+        if (req.body?.warehouseID) {
             const matchingWarehouse = storage
                 .getWarehouses()
                 .filter((warehouse) => warehouse.id === req.body.warehouseID);
-            const warehouseExists = matchingWarehouse === 1;
+            const warehouseExists = matchingWarehouse.length === 1;
 
             if (!warehouseExists) {
                 res.status(400);
-                res.send({ message: "New inventory item must be associated with an existing warehouse." });
+                res.send({ message: "Provided warehouse ID is invalid." });
                 return;
             }
+        } else {
+            res.status(400);
+            res.send({ message: "New inventory item must be associated with an existing warehouse." });
+            return;
         }
 
         // Since the associated warehouse is valid, exact the body fields and create a new inventory object.
@@ -75,6 +79,70 @@ router.post('/', function (req, res) {
 
         res.status(200);
         res.send(newInventoryEntry);
+    } else {
+        res.status(400);
+        res.send({ message: "Body cannot be empty" });
+    }
+});
+
+/**
+ * POST route for updating an existing inventory item in the inventory list.
+ */
+router.put('/:inventoryId', (req, res) => {
+
+    if (req.body) {
+        if (!req.params?.inventoryId) {
+            res.status(400);
+            res.send({ message: "Inventory ID required" });
+        }
+
+        const matchingInventory = storage
+            .getInventories()
+            .filter((inventory) => inventory.id === req.params.inventoryId);
+        const inventoryExists = matchingInventory.length === 1;
+
+        if (!inventoryExists) {
+            res.status(400);
+            res.send({ message: "Cannot update non-existant inventory item." });
+            return;
+        }
+
+        const { warehouseID, itemName, description, category, status, quantity } = { ...req.body };
+        const associatedWarehouse = storage
+            .getWarehouses()
+            .filter((warehouse) => warehouse.id === warehouseID)[0];
+
+        if (!associatedWarehouse) {
+            res.status(400);
+            res.send({ message: "Provided warehouse ID is invalid." });
+            return;
+        }
+
+        if (!(itemName && description && category && status && quantity)) {
+            res.status(400);
+            res.send({ message: "New inventory object missing required field(s)." });
+            return;
+        }
+
+        // At this point, we've done all the reasonable validation checks, hence we can start updating
+        const updatedInventories = storage.getInventories();
+
+        const targetInventoryIndex = updatedInventories.findIndex( inventory => inventory.id === req.params.inventoryId);
+        const targetInventoryItem = updatedInventories[targetInventoryIndex];
+        
+        targetInventoryItem['warehouseID'] = warehouseID;
+        targetInventoryItem['warehouseName'] = associatedWarehouse.name;
+        targetInventoryItem['itemName'] = itemName;
+        targetInventoryItem['description'] = description;
+        targetInventoryItem['category'] = category;
+        targetInventoryItem['status'] = status;
+        targetInventoryItem['quantity'] = quantity;
+
+        storage.setInventories(updatedInventories);
+
+        res.status(200);
+        res.send(targetInventoryItem);
+
     } else {
         res.status(400);
         res.send({ message: "Body cannot be empty" });
