@@ -86,7 +86,7 @@ router.post('/', function (req, res) {
 });
 
 /**
- * POST route for updating an existing inventory item in the inventory list.
+ * PUT route for updating an existing inventory item in the inventory list.
  */
 router.put('/:inventoryId', (req, res) => {
 
@@ -103,7 +103,7 @@ router.put('/:inventoryId', (req, res) => {
 
         if (!inventoryExists) {
             res.status(400);
-            res.send({ message: "Cannot update non-existant inventory item." });
+            res.send({ message: "Cannot update non-existent inventory item." });
             return;
         }
 
