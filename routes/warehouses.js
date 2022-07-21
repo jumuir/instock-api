@@ -13,7 +13,7 @@ router.get('/', function (req, res) {
 
 // GET single warehouse and inventory list
 router.get("/:id", function (req, res) {
-
+    
   const paramsID = req.params.id
   const singleWarehouse = warehouseData.find(warehouse => warehouse.id === paramsID)
 
