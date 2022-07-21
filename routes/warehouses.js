@@ -1,18 +1,18 @@
-const express = require("express");
-const fs = require("fs");
-const warehouseData = require("../data/warehouses.json");
-const inventoryData = require("../data/inventories.json");
+const express = require('express');
+const fs = require('fs');
+const warehouseData = require('../data/warehouses.json');
+const inventoryData = require('../data/inventories.json');
 const router = express.Router();
-const { v4: uuid } = require("uuid");
-const { validatePhone, validateEmail } = require("../middleware/validators");
+const { v4: uuid } = require('uuid');
+const { validatePhone, validateEmail } = require('../middleware/validators');
 
 // GET List of All warehouses
-router.get("/", function (req, res) {
+router.get('/', function (req, res) {
   res.status(201).json(warehouseData);
 });
 
 // GET single warehouse and inventory list
-router.get("/:id", function (req, res) {
+router.get('/:id', function (req, res) {
   const paramsID = req.params.id;
   const singleWarehouse = warehouseData.find((warehouse) => warehouse.id === paramsID);
 
@@ -28,7 +28,7 @@ router.get("/:id", function (req, res) {
 });
 
 // POST new warehouse
-router.post("/", (req, res) => {
+router.post('/', (req, res) => {
   const { name, address, city, country, contact } = req.body;
   try {
     if (!validatePhone(contact.phone)) {
@@ -73,7 +73,7 @@ router.post("/", (req, res) => {
 
   warehouseData.push(warehouseToAdd);
 
-  fs.writeFile("./data/warehouses.json", JSON.stringify(warehouseData), (err) => {
+  fs.writeFile('./data/warehouses.json', JSON.stringify(warehouseData), (err) => {
     if (err) throw err;
   });
 
@@ -81,7 +81,7 @@ router.post("/", (req, res) => {
 });
 
 // PUT edit warehouse
-router.put("/:warehouseId", (req, res) => {
+router.put('/:warehouseId', (req, res) => {
   const { name, address, city, country, contact } = req.body;
 
   try {
@@ -132,14 +132,14 @@ router.put("/:warehouseId", (req, res) => {
   const warehouseIndex = warehouseData.findIndex((wh) => wh.id === req.params.warehouseId);
   warehouseData[warehouseIndex] = warehouseUpdate;
 
-  fs.writeFile("./data/warehouses.json", JSON.stringify(warehouseData), (err) => {
+  fs.writeFile('./data/warehouses.json', JSON.stringify(warehouseData), (err) => {
     if (err) throw err;
   });
 
   res.send(warehouseUpdate);
 });
 
-router.delete("/:warehouseId", (req, res) => {
+router.delete('/:warehouseId', (req, res) => {
   if (req.params) {
     console.log("Request sucessful");
   }
@@ -152,7 +152,7 @@ router.delete("/:warehouseId", (req, res) => {
 
   const deletedWarehouse = warehouseData.at(warehouseToDelete);
     // ? writing a new list of Warehouses to .json list
-      fs.writeFile("./data/warehouses.json", JSON.stringify(warehouseData), (err) => {
+      fs.writeFile('./data/warehouses.json', JSON.stringify(warehouseData), (err) => {
         if (err) {
           console.log(err);
         }
@@ -167,7 +167,7 @@ router.delete("/:warehouseId", (req, res) => {
   }
 
   // ? writing a new list of Warehouses to .json list
-  fs.writeFile("./data/inventories.json", JSON.stringify(inventoryData), (err) => {
+  fs.writeFile('./data/inventories.json', JSON.stringify(inventoryData), (err) => {
     if (err) {
       console.log(err);
     }
