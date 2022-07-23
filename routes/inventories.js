@@ -152,35 +152,39 @@ router.put('/:inventoryId', (req, res) => {
 router.delete("/:inventoryId", (req, res) => {
     if (!req.params) {
         res.send("Missing parameters of request").status(400);
+        return;
     }
-    //reading inventory file
-    fs.readFile("./data/inventories.json", (err, data) => {
-        if (err) {
-            console.log("File read error");
-            res.send("Cannot read file");
-        }
 
-        console.log("File read success");
-    });
+    console.log(req.params.inventoryId);
 
     //determine inventory index
-    const itemToDelete = inventoryData.findIndex((invItem) => invItem.id === req.params.inventoryId);
+    const itemToDeleteIndex = storage.getInventories().findIndex( (invItem) => invItem.id === req.params.inventoryId);
 
-    console.log(`Index of file to delete is: ${itemToDelete}`);
+    console.log(itemToDeleteIndex);
 
-    //Deleting item from inventory
+    if (itemToDeleteIndex === -1) {
+        res.status(400);
+        res.send({message: "Invalid inventory ID."});
+        return;
+    }
 
-    inventoryData.splice(itemToDelete, 1);
+    console.log(`Index of file to delete is: ${itemToDeleteIndex}`);
 
-    console.log(`File deleted:${JSON.stringify(inventoryData[itemToDelete])}`);
+    // Deleting item from inventory
+    const updatedInventories = storage.getInventories()
+    const deletedItem = updatedInventories.splice(itemToDeleteIndex, 1);
 
-    fs.writeFile("./data/inventories.json", JSON.stringify(inventoryData), (err, data) => {
-        if (err) {
-            throw new Error(err);
+    console.log(`File deleted: ${JSON.stringify(deletedItem)}`);
+
+    storage.setInventories(updatedInventories);
+
+    res.status(200);
+    res.send(
+        {
+            message: "Succesfully deleted inventory item",
+            deleteInventory: deletedItem
         }
-    });
-
-    res.send(`Deleted item: ${JSON.stringify(inventoryData[itemToDelete])}`).status(200);
+    );
 });
 
 module.exports = router;
