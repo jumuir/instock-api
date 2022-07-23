@@ -155,12 +155,8 @@ router.delete("/:inventoryId", (req, res) => {
         return;
     }
 
-    console.log(req.params.inventoryId);
-
-    //determine inventory index
+    // Determine inventory index
     const itemToDeleteIndex = storage.getInventories().findIndex( (invItem) => invItem.id === req.params.inventoryId);
-
-    console.log(itemToDeleteIndex);
 
     if (itemToDeleteIndex === -1) {
         res.status(400);
@@ -168,13 +164,9 @@ router.delete("/:inventoryId", (req, res) => {
         return;
     }
 
-    console.log(`Index of file to delete is: ${itemToDeleteIndex}`);
-
     // Deleting item from inventory
     const updatedInventories = storage.getInventories()
     const deletedItem = updatedInventories.splice(itemToDeleteIndex, 1);
-
-    console.log(`File deleted: ${JSON.stringify(deletedItem)}`);
 
     storage.setInventories(updatedInventories);
 
