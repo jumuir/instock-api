@@ -1,7 +1,4 @@
 const express = require('express');
-const fs = require('fs');
-const warehouseData = require('../data/warehouses.json');
-const inventoryData = require('../data/inventories.json');
 const router = express.Router();
 const { v4: uuid } = require('uuid');
 
@@ -11,13 +8,13 @@ let storage = new StorageWrapper();
 
 //get all inventory
 router.get('/', (_req, res) => {
-    res.status(200).json(inventoryData);
+    res.status(200).json(storage.getInventories());
 });
 
 //get single inventory info
 router.get('/:inventoryId', (req, res) => {
     const id = req.params.inventoryId;
-    const selectedInventory = inventoryData.filter((inventory) => inventory.id === id);
+    const selectedInventory = storage.getInventories().filter((inventory) => inventory.id === id);
 
     if (selectedInventory) {
         res.status(200).send(selectedInventory);
@@ -165,7 +162,7 @@ router.delete("/:inventoryId", (req, res) => {
     }
 
     // Deleting item from inventory
-    const updatedInventories = storage.getInventories()
+    const updatedInventories = storage.getInventories();
     const deletedItem = updatedInventories.splice(itemToDeleteIndex, 1);
 
     storage.setInventories(updatedInventories);
