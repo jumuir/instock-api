@@ -1,7 +1,4 @@
 const express = require('express');
-const fs = require('fs');
-const warehouseData = require('../data/warehouses.json');
-const inventoryData = require('../data/inventories.json');
 const router = express.Router();
 const { v4: uuid } = require('uuid');
 
@@ -11,13 +8,13 @@ let storage = new StorageWrapper();
 
 //get all inventory
 router.get('/', (_req, res) => {
-    res.status(200).json(inventoryData);
+    res.status(200).json(storage.getInventories());
 });
 
 //get single inventory info
 router.get('/:inventoryId', (req, res) => {
     const id = req.params.inventoryId;
-    const selectedInventory = inventoryData.filter((inventory) => inventory.id === id);
+    const selectedInventory = storage.getInventories().filter((inventory) => inventory.id === id);
 
     if (selectedInventory) {
         res.status(200).send(selectedInventory);
@@ -152,35 +149,31 @@ router.put('/:inventoryId', (req, res) => {
 router.delete("/:inventoryId", (req, res) => {
     if (!req.params) {
         res.send("Missing parameters of request").status(400);
+        return;
     }
-    //reading inventory file
-    fs.readFile("./data/inventories.json", (err, data) => {
-        if (err) {
-            console.log("File read error");
-            res.send("Cannot read file");
+
+    // Determine inventory index
+    const itemToDeleteIndex = storage.getInventories().findIndex( (invItem) => invItem.id === req.params.inventoryId);
+
+    if (itemToDeleteIndex === -1) {
+        res.status(400);
+        res.send({message: "Invalid inventory ID."});
+        return;
+    }
+
+    // Deleting item from inventory
+    const updatedInventories = storage.getInventories();
+    const deletedItem = updatedInventories.splice(itemToDeleteIndex, 1);
+
+    storage.setInventories(updatedInventories);
+
+    res.status(200);
+    res.send(
+        {
+            message: "Succesfully deleted inventory item",
+            deleteInventory: deletedItem
         }
-
-        console.log("File read success");
-    });
-
-    //determine inventory index
-    const itemToDelete = inventoryData.findIndex((invItem) => invItem.id === req.params.inventoryId);
-
-    console.log(`Index of file to delete is: ${itemToDelete}`);
-
-    //Deleting item from inventory
-
-    inventoryData.splice(itemToDelete, 1);
-
-    console.log(`File deleted:${JSON.stringify(inventoryData[itemToDelete])}`);
-
-    fs.writeFile("./data/inventories.json", JSON.stringify(inventoryData), (err, data) => {
-        if (err) {
-            throw new Error(err);
-        }
-    });
-
-    res.send(`Deleted item: ${JSON.stringify(inventoryData[itemToDelete])}`).status(200);
+    );
 });
 
 module.exports = router;
