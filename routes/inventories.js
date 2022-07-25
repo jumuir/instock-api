@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { v4: uuid } = require('uuid');
 
-// Import wrapper class for file system
-const StorageWrapper = require("./../utility/storage-wrapper.js");
-let storage = new StorageWrapper();
+// Import wrapper for file system
+const storage = require("./../utility/storage-wrapper.js");
 
 //get all inventory
 router.get('/', (_req, res) => {
@@ -115,7 +114,7 @@ router.put('/:inventoryId', (req, res) => {
             return;
         }
 
-        if (!(itemName && description && category && status && quantity)) {
+        if (!(itemName && description && category && status && (quantity >= 0))) {
             res.status(400);
             res.send({ message: "New inventory object missing required field(s)." });
             return;

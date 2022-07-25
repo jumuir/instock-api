@@ -66,6 +66,22 @@ class StorageWrapper {
                 throw err
         });
     }
+
+    /**
+     * Set both the in memory and local storage warehouses to the new value.
+     */
+     setWarehouses(value) {
+
+        // Update the current variable in memory to the new value
+        this._warehouses = value;
+
+        // Save the new variable to disk to replace existing.
+        fs.writeFile("./data/warehouses.json", JSON.stringify(this._warehouses), (err) => {
+            if (err)
+                throw err
+        });
+    }
 }
 
-module.exports = StorageWrapper;
+// Export cached singleton instead of class
+module.exports = new StorageWrapper();
