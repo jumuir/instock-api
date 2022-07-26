@@ -148,9 +148,6 @@ router.put('/:warehouseId', (req, res) => {
 });
 
 router.delete('/:warehouseId', (req, res) => {
-    if (req.params) {
-        console.log("Request sucessful");
-    }
     //? deleting a warehouse
 
     const warehouseToDelete = storage.getWarehouses().findIndex(
